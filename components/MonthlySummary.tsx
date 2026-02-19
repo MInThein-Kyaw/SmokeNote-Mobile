@@ -200,7 +200,7 @@ const MonthlySummary: React.FC<MonthlySummaryProps> = ({ logs }) => {
             style={styles.monthArrow}
             disabled={availableMonths.findIndex(m => m.month === compareMonth && m.year === compareYear) === availableMonths.length - 1}
           >
-            <FontAwesome6 name="chevron-left" size={16} color="#71717a" />
+            <FontAwesome6 name="chevron-left" size={16} color="#a1a1aa" />
           </TouchableOpacity>
           
           <View style={styles.comparisonItem}>
@@ -214,7 +214,7 @@ const MonthlySummary: React.FC<MonthlySummaryProps> = ({ logs }) => {
             ) : logsThisMonth.length > logsCompareMonth.length ? (
               <FontAwesome6 name="arrow-up" size={20} color="#ef4444" />
             ) : (
-              <FontAwesome6 name="minus" size={20} color="#71717a" />
+              <FontAwesome6 name="minus" size={20} color="#a1a1aa" />
             )}
           </View>
           
@@ -228,7 +228,7 @@ const MonthlySummary: React.FC<MonthlySummaryProps> = ({ logs }) => {
             style={styles.monthArrow}
             disabled={availableMonths.findIndex(m => m.month === compareMonth && m.year === compareYear) === 0}
           >
-            <FontAwesome6 name="chevron-right" size={16} color="#71717a" />
+            <FontAwesome6 name="chevron-right" size={16} color="#a1a1aa" />
           </TouchableOpacity>
         </View>
       </View>
@@ -240,7 +240,7 @@ const MonthlySummary: React.FC<MonthlySummaryProps> = ({ logs }) => {
           Object.entries(weeklyData).map(([week, count]) => (
             <View key={week} style={styles.weekCard}>
               <View style={styles.weekInfo}>
-                <FontAwesome6 name="calendar-week" size={14} color="#71717a" />
+                <FontAwesome6 name="calendar-week" size={14} color="#a1a1aa" />
                 <Text style={styles.weekLabel}>Week {parseInt(week) + 1}</Text>
               </View>
               <View style={styles.weekBar}>
@@ -276,7 +276,7 @@ const MonthlySummary: React.FC<MonthlySummaryProps> = ({ logs }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    padding: 16, // Standardized padding
   },
   header: {
     marginBottom: 32,
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     marginTop: 4,
   },
   section: {
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 10,
     fontWeight: 'bold',
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     letterSpacing: 1.5,
     marginBottom: 12,
     paddingLeft: 4,
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#27272a',
     borderRadius: 16,
-    padding: 24,
+    padding: 16, // Standardized padding
     alignItems: 'center',
   },
   cardHeader: {
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
   bigNumberLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     letterSpacing: 2,
     marginTop: 4,
   },
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 9,
     fontWeight: '600',
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     letterSpacing: 1,
     marginTop: 4,
     textAlign: 'center',
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
   calendarDayLabelText: {
     fontSize: 11,
     fontWeight: 'bold',
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
   },
   calendarGrid: {
     flexDirection: 'row',
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
   },
   comparisonMonth: {
     fontSize: 12,
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     marginBottom: 8,
   },
   comparisonValue: {
@@ -508,7 +508,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 14,
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     marginTop: 12,
   },
   totalCard: {
@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     letterSpacing: 1.5,
     marginTop: 8,
   },

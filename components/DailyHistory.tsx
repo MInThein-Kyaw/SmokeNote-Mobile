@@ -20,7 +20,7 @@ const DailyHistory: React.FC<DailyHistoryProps> = ({ logs, onRemove }) => {
     <View style={styles.logCard}>
       <View style={styles.logInfo}>
         <View style={styles.iconContainer}>
-          <FontAwesome6 name="clock" size={16} color="#71717a" />
+          <FontAwesome6 name="clock" size={16} color="#a1a1aa" />
         </View>
         <View>
           <Text style={styles.logTime}>
@@ -32,7 +32,7 @@ const DailyHistory: React.FC<DailyHistoryProps> = ({ logs, onRemove }) => {
       <View style={styles.logActions}>
         <FontAwesome6 name="check" size={16} color="#10b981" style={{ marginRight: 15 }} />
         <TouchableOpacity onPress={() => onRemove(item.id)} style={styles.deleteButton}>
-          <FontAwesome6 name="trash-can" size={16} color="#71717a" />
+          <FontAwesome6 name="trash-can" size={16} color="#a1a1aa" />
         </TouchableOpacity>
       </View>
     </View>
@@ -73,7 +73,7 @@ const DailyHistory: React.FC<DailyHistoryProps> = ({ logs, onRemove }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    padding: 16, // Standardized padding
   },
   header: {
     flexDirection: 'row',
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
   },
   badge: {
     backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   logSubtitle: {
     fontSize: 10,
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     fontWeight: '600',
   },
   logActions: {

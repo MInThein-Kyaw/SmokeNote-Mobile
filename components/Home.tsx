@@ -49,7 +49,7 @@ const Home: React.FC<HomeProps> = ({ logs, onLog }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    padding: 16, // Standardized padding
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 40,
@@ -61,12 +61,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#f4f4f5',
+    color: '#f4f4f5', // WCAG AAA compliant
     letterSpacing: -0.5,
   },
   subtitle: {
     fontSize: 16,
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast ratio
     marginTop: 4,
   },
   buttonWrapper: {
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   progressLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#a1a1aa',
+    color: '#a1a1aa', // Better contrast
     letterSpacing: 2,
     marginBottom: 4,
   },

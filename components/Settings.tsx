@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, Switch } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, Switch, ScrollView } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { UserSettings, SmokeLog } from '../types';
+import Card from './atoms/Card';
+import SectionHeader from './atoms/SectionHeader';
 
 interface SettingsProps {
   settings: UserSettings;
@@ -42,17 +44,17 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={styles.header}>
         <Text style={styles.title}>Settings</Text>
         <Text style={styles.subtitle}>Configure your profile and tracking preferences</Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>PROFILE</Text>
-        <View style={styles.card}>
+        <SectionHeader title="PROFILE" />
+        <Card>
           <View style={styles.cardIcon}>
-            <FontAwesome6 name="user" size={16} color="#71717a" />
+            <FontAwesome6 name="user" size={16} color="#a1a1aa" />
           </View>
           <View style={styles.cardContent}>
             <Text style={styles.inputLabel}>YOUR NAME</Text>
@@ -61,14 +63,14 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
               value={settings.name}
               onChangeText={handleNameChange}
               placeholder="Enter name..."
-              placeholderTextColor="#3f3f46"
+              placeholderTextColor="#52525b"
             />
           </View>
-        </View>
+        </Card>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>PREFERENCES</Text>
+        <SectionHeader title="PREFERENCES" />
         
         <TouchableOpacity 
           style={styles.card} 
@@ -76,7 +78,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
           activeOpacity={0.7}
         >
           <View style={styles.cardIcon}>
-            <FontAwesome6 name="bell" size={16} color="#71717a" />
+            <FontAwesome6 name="bell" size={16} color="#a1a1aa" />
           </View>
           <View style={[styles.cardContent, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
             <View>
@@ -98,20 +100,20 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
           activeOpacity={0.7}
         >
           <View style={styles.cardIcon}>
-            <FontAwesome6 name="file-export" size={16} color="#71717a" />
+            <FontAwesome6 name="file-export" size={16} color="#a1a1aa" />
           </View>
           <View style={[styles.cardContent, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
             <View>
               <Text style={styles.cardTitle}>Export Data</Text>
               <Text style={styles.cardSubtitle}>Download CSV of logs</Text>
             </View>
-            <FontAwesome6 name="chevron-right" size={12} color="#3f3f46" />
+            <FontAwesome6 name="chevron-right" size={12} color="#52525b" />
           </View>
         </TouchableOpacity>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>MAINTENANCE</Text>
+        <SectionHeader title="MAINTENANCE" />
         
         <TouchableOpacity 
           style={[styles.card, styles.dangerCard]} 
@@ -131,13 +133,17 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
       <View style={styles.footer}>
         <Text style={styles.versionText}>SMOKENOTE V1.0.4</Text>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    flex: 1,
+  },
+  contentContainer: {
+    padding: 16, // Standardized padding
+    paddingBottom: 32, // Extra bottom padding for scroll
   },
   header: {
     marginBottom: 32,
@@ -145,30 +151,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#f4f4f5',
+    color: '#f4f4f5', // High contrast
   },
   subtitle: {
     fontSize: 14,
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     marginTop: 4,
   },
   section: {
     marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#71717a',
-    letterSpacing: 1.5,
-    marginBottom: 12,
-    paddingLeft: 4,
   },
   card: {
     backgroundColor: '#18181b',
     borderWidth: 1,
     borderColor: '#27272a',
     borderRadius: 16,
-    padding: 16,
+    padding: 16, // Standardized padding
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
@@ -188,7 +186,7 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 10,
     fontWeight: 'bold',
-    color: '#71717a',
+    color: '#a1a1aa', // Better contrast
     letterSpacing: -0.2,
   },
   input: {
@@ -205,7 +203,7 @@ const styles = StyleSheet.create({
   },
   cardSubtitle: {
     fontSize: 12,
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     marginTop: 2,
   },
   dangerCard: {
@@ -231,7 +229,7 @@ const styles = StyleSheet.create({
   },
   versionText: {
     fontSize: 10,
-    color: '#3f3f46',
+    color: '#52525b',
     fontWeight: 'bold',
     letterSpacing: 2,
   }

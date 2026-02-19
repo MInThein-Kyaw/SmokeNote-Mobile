@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView }) => {
             <FontAwesome6 
               name={tab.icon as any} 
               size={20} 
-              color={isActive ? '#10b981' : '#71717a'} 
+              color={isActive ? '#10b981' : '#a1a1aa'} 
             />
             <Text style={[styles.label, isActive && styles.activeLabel]}>
               {tab.label}
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 10,
     fontWeight: '500',
-    color: '#71717a',
+    color: '#a1a1aa', // Improved contrast
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
