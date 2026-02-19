@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, Switch, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Alert, Switch, ScrollView } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { UserSettings, SmokeLog } from '../types';
-import Card from './atoms/Card';
-import SectionHeader from './atoms/SectionHeader';
+import { UserSettings, SmokeLog } from '../../types';
+import SectionHeader from '../atoms/SectionHeader';
+import SettingsRow from '../molecules/SettingsRow';
+import ScreenHeader from '../molecules/ScreenHeader';
 
 interface SettingsProps {
   settings: UserSettings;
@@ -45,14 +46,14 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Settings</Text>
-        <Text style={styles.subtitle}>Configure your profile and tracking preferences</Text>
-      </View>
+      <ScreenHeader
+        title="Settings"
+        subtitle="Configure your profile and tracking preferences"
+      />
 
       <View style={styles.section}>
         <SectionHeader title="PROFILE" />
-        <Card>
+        <View style={styles.card}>
           <View style={styles.cardIcon}>
             <FontAwesome6 name="user" size={16} color="#a1a1aa" />
           </View>
@@ -66,68 +67,48 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
               placeholderTextColor="#52525b"
             />
           </View>
-        </Card>
+        </View>
       </View>
 
       <View style={styles.section}>
         <SectionHeader title="PREFERENCES" />
         
-        <TouchableOpacity 
-          style={styles.card} 
+        <SettingsRow
+          icon="bell"
+          title="Notifications"
+          subtitle="Enable daily reminders"
           onPress={toggleReminders}
-          activeOpacity={0.7}
-        >
-          <View style={styles.cardIcon}>
-            <FontAwesome6 name="bell" size={16} color="#a1a1aa" />
-          </View>
-          <View style={[styles.cardContent, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
-            <View>
-              <Text style={styles.cardTitle}>Notifications</Text>
-              <Text style={styles.cardSubtitle}>Enable daily reminders</Text>
-            </View>
+          rightComponent={
             <Switch 
               value={settings.remindersEnabled} 
               onValueChange={toggleReminders}
               trackColor={{ false: '#27272a', true: '#10b981' }}
               thumbColor="#ffffff"
             />
-          </View>
-        </TouchableOpacity>
+          }
+        />
 
-        <TouchableOpacity 
-          style={styles.card} 
+        <SettingsRow
+          icon="file-export"
+          title="Export Data"
+          subtitle="Download CSV of logs"
           onPress={handleExportData}
-          activeOpacity={0.7}
-        >
-          <View style={styles.cardIcon}>
-            <FontAwesome6 name="file-export" size={16} color="#a1a1aa" />
-          </View>
-          <View style={[styles.cardContent, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
-            <View>
-              <Text style={styles.cardTitle}>Export Data</Text>
-              <Text style={styles.cardSubtitle}>Download CSV of logs</Text>
-            </View>
+          rightComponent={
             <FontAwesome6 name="chevron-right" size={12} color="#52525b" />
-          </View>
-        </TouchableOpacity>
+          }
+        />
       </View>
 
       <View style={styles.section}>
         <SectionHeader title="MAINTENANCE" />
         
-        <TouchableOpacity 
-          style={[styles.card, styles.dangerCard]} 
+        <SettingsRow
+          icon="trash-can"
+          title="Clear All History"
+          subtitle="This cannot be undone"
           onPress={handleClearData}
-          activeOpacity={0.7}
-        >
-          <View style={[styles.cardIcon, styles.dangerIcon]}>
-            <FontAwesome6 name="trash-can" size={16} color="#ef4444" />
-          </View>
-          <View style={styles.cardContent}>
-            <Text style={styles.dangerTitle}>Clear All History</Text>
-            <Text style={styles.dangerSubtitle}>This cannot be undone</Text>
-          </View>
-        </TouchableOpacity>
+          isDanger
+        />
       </View>
 
       <View style={styles.footer}>
@@ -142,21 +123,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    padding: 16, // Standardized padding
-    paddingBottom: 32, // Extra bottom padding for scroll
-  },
-  header: {
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#f4f4f5', // High contrast
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#a1a1aa', // Improved contrast
-    marginTop: 4,
+    padding: 16,
+    paddingBottom: 32,
   },
   section: {
     marginBottom: 24,
@@ -166,62 +134,34 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#27272a',
     borderRadius: 16,
-    padding: 16, // Standardized padding
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
-    gap: 16,
   },
   cardIcon: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: 20,
     backgroundColor: '#27272a',
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 12,
   },
   cardContent: {
     flex: 1,
   },
   inputLabel: {
     fontSize: 10,
-    fontWeight: 'bold',
-    color: '#a1a1aa', // Better contrast
-    letterSpacing: -0.2,
+    fontWeight: '600',
+    color: '#a1a1aa',
+    letterSpacing: 1.5,
   },
   input: {
     color: '#f4f4f5',
     fontSize: 16,
     fontWeight: '500',
     padding: 0,
-    marginTop: 2,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#f4f4f5',
-  },
-  cardSubtitle: {
-    fontSize: 12,
-    color: '#a1a1aa', // Improved contrast
-    marginTop: 2,
-  },
-  dangerCard: {
-    backgroundColor: 'rgba(239, 68, 68, 0.05)',
-    borderColor: 'rgba(239, 68, 68, 0.1)',
-  },
-  dangerIcon: {
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-  },
-  dangerTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#ef4444',
-  },
-  dangerSubtitle: {
-    fontSize: 12,
-    color: 'rgba(239, 68, 68, 0.7)',
-    marginTop: 2,
+    marginTop: 4,
   },
   footer: {
     marginTop: 40,

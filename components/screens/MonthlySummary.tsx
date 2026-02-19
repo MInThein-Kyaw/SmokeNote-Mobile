@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { SmokeLog } from '../types';
+import { SmokeLog } from '../../types';
+import ScreenHeader from '../molecules/ScreenHeader';
+import SectionHeader from '../atoms/SectionHeader';
+import StatCard from '../atoms/StatCard';
+import CalendarGrid from '../organisms/CalendarGrid';
+import WeeklyChart from '../organisms/WeeklyChart';
 
 interface MonthlySummaryProps {
   logs: SmokeLog[];
 }
-
-const { width } = Dimensions.get('window');
 
 const MonthlySummary: React.FC<MonthlySummaryProps> = ({ logs }) => {
   const now = new Date();
@@ -90,75 +93,24 @@ const MonthlySummary: React.FC<MonthlySummaryProps> = ({ logs }) => {
       setCompareYear(newMonth.year);
     }
   };
-  
-  // Render calendar
-  const renderCalendar = () => {
-    const days = [];
-    const dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-    
-    // Add day labels
-    const labels = dayLabels.map((label, index) => (
-      <View key={`label-${index}`} style={styles.calendarDayLabel}>
-        <Text style={styles.calendarDayLabelText}>{label}</Text>
-      </View>
-    ));
-    
-    // Add empty cells for days before month starts
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<View key={`empty-${i}`} style={styles.calendarDay} />);
-    }
-    
-    // Add days of month
-    for (let day = 1; day <= daysInMonth; day++) {
-      const count = dailyCounts[day] || 0;
-      const isToday = day === currentDay;
-      const isFuture = day > currentDay;
-      
-      days.push(
-        <View 
-          key={`day-${day}`} 
-          style={[
-            styles.calendarDay,
-            isToday && styles.calendarDayToday,
-            isFuture && styles.calendarDayFuture
-          ]}
-        >
-          <Text style={[
-            styles.calendarDayNumber,
-            isToday && styles.calendarDayNumberToday,
-            isFuture && styles.calendarDayNumberFuture
-          ]}>
-            {day}
-          </Text>
-          {count > 0 && !isFuture && (
-            <View style={styles.calendarDayCount}>
-              <Text style={styles.calendarDayCountText}>{count}</Text>
-            </View>
-          )}
-        </View>
-      );
-    }
-    
-    return (
-      <View style={styles.calendar}>
-        <View style={styles.calendarHeader}>{labels}</View>
-        <View style={styles.calendarGrid}>{days}</View>
-      </View>
-    );
-  };
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Monthly Summary</Text>
-        <Text style={styles.subtitle}>{monthName}</Text>
-      </View>
+      <ScreenHeader
+        title="Monthly Summary"
+        subtitle={monthName}
+      />
 
       {/* Calendar View */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>CALENDAR</Text>
+        <SectionHeader title="CALENDAR" />
         <View style={styles.card}>
-          {renderCalendar()}
+          <CalendarGrid
+            daysInMonth={daysInMonth}
+            currentDay={currentDay}
+            firstDayOfMonth={firstDayOfMonth}
+            dailyCounts={dailyCounts}
+          />
         </View>
       </View>
 
@@ -175,25 +127,16 @@ const MonthlySummary: React.FC<MonthlySummaryProps> = ({ logs }) => {
           <View style={styles.divider} />
           
           <View style={styles.statsRow}>
-            <View style={styles.stat}>
-              <Text style={styles.statValue}>{avgPerDay}</Text>
-              <Text style={styles.statLabel}>PER DAY</Text>
-            </View>
-            <View style={styles.stat}>
-              <Text style={styles.statValue}>{currentDay}</Text>
-              <Text style={styles.statLabel}>DAYS PASSED</Text>
-            </View>
-            <View style={styles.stat}>
-              <Text style={styles.statValue}>{daysInMonth}</Text>
-              <Text style={styles.statLabel}>TOTAL DAYS</Text>
-            </View>
+            <StatCard value={avgPerDay} label="PER DAY" />
+            <StatCard value={String(currentDay)} label="DAYS PASSED" />
+            <StatCard value={String(daysInMonth)} label="TOTAL DAYS" />
           </View>
         </View>
       </View>
 
       {/* Comparison with Selected Month */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>COMPARISON</Text>
+        <SectionHeader title="COMPARISON" />
         <View style={styles.comparisonCard}>
           <TouchableOpacity 
             onPress={() => changeCompareMonth('prev')}
@@ -235,36 +178,13 @@ const MonthlySummary: React.FC<MonthlySummaryProps> = ({ logs }) => {
 
       {/* Weekly Breakdown */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>WEEKLY BREAKDOWN</Text>
-        {Object.keys(weeklyData).length > 0 ? (
-          Object.entries(weeklyData).map(([week, count]) => (
-            <View key={week} style={styles.weekCard}>
-              <View style={styles.weekInfo}>
-                <FontAwesome6 name="calendar-week" size={14} color="#a1a1aa" />
-                <Text style={styles.weekLabel}>Week {parseInt(week) + 1}</Text>
-              </View>
-              <View style={styles.weekBar}>
-                <View 
-                  style={[
-                    styles.weekBarFill, 
-                    { width: `${Math.min((count / Math.max(...Object.values(weeklyData))) * 100, 100)}%` }
-                  ]} 
-                />
-                <Text style={styles.weekCount}>{count}</Text>
-              </View>
-            </View>
-          ))
-        ) : (
-          <View style={styles.emptyState}>
-            <FontAwesome6 name="chart-simple" size={32} color="#3f3f46" />
-            <Text style={styles.emptyText}>No data this month yet</Text>
-          </View>
-        )}
+        <SectionHeader title="WEEKLY BREAKDOWN" />
+        <WeeklyChart weeklyData={weeklyData} />
       </View>
 
       {/* Total Stats */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>ALL TIME</Text>
+        <SectionHeader title="ALL TIME" />
         <View style={styles.totalCard}>
           <Text style={styles.totalNumber}>{logs.length}</Text>
           <Text style={styles.totalLabel}>TOTAL CIGARETTES LOGGED</Text>
@@ -276,39 +196,25 @@ const MonthlySummary: React.FC<MonthlySummaryProps> = ({ logs }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16, // Standardized padding
-  },
-  header: {
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#f4f4f5',
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#a1a1aa', // Improved contrast
-    marginTop: 4,
+    padding: 16,
   },
   section: {
     marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#a1a1aa', // Improved contrast
-    letterSpacing: 1.5,
-    marginBottom: 12,
-    paddingLeft: 4,
   },
   mainCard: {
     backgroundColor: '#18181b',
     borderWidth: 1,
     borderColor: '#27272a',
     borderRadius: 16,
-    padding: 16, // Standardized padding
+    padding: 16,
     alignItems: 'center',
+  },
+  card: {
+    backgroundColor: '#18181b',
+    borderWidth: 1,
+    borderColor: '#27272a',
+    borderRadius: 16,
+    padding: 16,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -329,7 +235,7 @@ const styles = StyleSheet.create({
   bigNumberLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#a1a1aa', // Improved contrast
+    color: '#a1a1aa',
     letterSpacing: 2,
     marginTop: 4,
   },
@@ -343,91 +249,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 24,
     justifyContent: 'center',
-  },
-  stat: {
-    alignItems: 'center',
-  },
-  statValue: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#f4f4f5',
-  },
-  statLabel: {
-    fontSize: 9,
-    fontWeight: '600',
-    color: '#a1a1aa', // Improved contrast
-    letterSpacing: 1,
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  card: {
-    backgroundColor: '#18181b',
-    borderWidth: 1,
-    borderColor: '#27272a',
-    borderRadius: 16,
-    padding: 16,
-  },
-  calendar: {
-    width: '100%',
-  },
-  calendarHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 12,
-  },
-  calendarDayLabel: {
-    width: '14.2%',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  calendarDayLabelText: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    color: '#a1a1aa', // Improved contrast
-  },
-  calendarGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  calendarDay: {
-    width: '14.2%',
-    aspectRatio: 1,
-    padding: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 4,
-  },
-  calendarDayToday: {
-    backgroundColor: '#27272a',
-    borderRadius: 8,
-  },
-  calendarDayFuture: {
-    opacity: 0.3,
-  },
-  calendarDayNumber: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#f4f4f5',
-    marginBottom: 2,
-  },
-  calendarDayNumberToday: {
-    color: '#10b981',
-  },
-  calendarDayNumberFuture: {
-    color: '#3f3f46',
-  },
-  calendarDayCount: {
-    backgroundColor: '#10b981',
-    borderRadius: 10,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    minWidth: 24,
-    alignItems: 'center',
-  },
-  calendarDayCountText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#09090b',
   },
   monthArrow: {
     padding: 8,
@@ -448,7 +269,7 @@ const styles = StyleSheet.create({
   },
   comparisonMonth: {
     fontSize: 12,
-    color: '#a1a1aa', // Improved contrast
+    color: '#a1a1aa',
     marginBottom: 8,
   },
   comparisonValue: {
@@ -458,58 +279,6 @@ const styles = StyleSheet.create({
   },
   comparisonArrow: {
     marginHorizontal: 16,
-  },
-  weekCard: {
-    backgroundColor: '#18181b',
-    borderWidth: 1,
-    borderColor: '#27272a',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 8,
-  },
-  weekInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
-  },
-  weekLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#f4f4f5',
-  },
-  weekBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 32,
-    backgroundColor: '#27272a',
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  weekBarFill: {
-    height: '100%',
-    backgroundColor: '#10b981',
-    borderRadius: 8,
-  },
-  weekCount: {
-    position: 'absolute',
-    right: 12,
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#f4f4f5',
-  },
-  emptyState: {
-    backgroundColor: '#18181b',
-    borderWidth: 1,
-    borderColor: '#27272a',
-    borderRadius: 16,
-    padding: 40,
-    alignItems: 'center',
-  },
-  emptyText: {
-    fontSize: 14,
-    color: '#a1a1aa', // Improved contrast
-    marginTop: 12,
   },
   totalCard: {
     backgroundColor: '#18181b',
@@ -527,7 +296,7 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#a1a1aa', // Improved contrast
+    color: '#a1a1aa',
     letterSpacing: 1.5,
     marginTop: 8,
   },

@@ -4,10 +4,10 @@ import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { AppView, SmokeLog, UserSettings } from './types';
 import { storage } from './services/storage';
-import Home from './components/Home';
-import DailyHistory from './components/DailyHistory';
-import MonthlySummary from './components/MonthlySummary';
-import Settings from './components/Settings';
+import Home from './components/screens/Home';
+import DailyHistory from './components/screens/DailyHistory';
+import MonthlySummary from './components/screens/MonthlySummary';
+import Settings from './components/screens/Settings';
 import Navbar from './components/Navbar';
 
 const STORAGE_KEY = 'smokenote_logs';
