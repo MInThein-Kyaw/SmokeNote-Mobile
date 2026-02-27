@@ -2,12 +2,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { AppView, SmokeLog, UserSettings } from './types';
 import { storage } from './services/storage';
+import { firebaseAuth } from './services/firebase';
 import Home from './components/screens/Home';
 import DailyHistory from './components/screens/DailyHistory';
 import MonthlySummary from './components/screens/MonthlySummary';
 import Settings from './components/screens/Settings';
+import Login from './components/screens/Login';
 import Navbar from './components/Navbar';
 
 const STORAGE_KEY = 'smokenote_logs';
@@ -18,6 +21,17 @@ const App: React.FC = () => {
   const [logs, setLogs] = useState<SmokeLog[]>([]);
   const [settings, setSettings] = useState<UserSettings>({ name: 'User', remindersEnabled: true });
   const [isLoaded, setIsLoaded] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  // Listen to auth state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+    return unsubscribe;
+  }, []);
   
   // Load initial state
   useEffect(() => {
@@ -82,7 +96,18 @@ const App: React.FC = () => {
     }
   };
 
-  if (!isLoaded) return null;
+  if (!isLoaded || authLoading) return null;
+
+  if (!user) {
+    return (
+      <View style={styles.container}>
+        <StatusBar style="light" />
+        <SafeAreaView style={styles.safeArea}>
+          <Login onLoginSuccess={() => {}} />
+        </SafeAreaView>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

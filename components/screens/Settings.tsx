@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, Alert, Switch, ScrollView } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { signOut } from 'firebase/auth';
+import { firebaseAuth } from '../../services/firebase';
 import { UserSettings, SmokeLog } from '../../types';
 import SectionHeader from '../atoms/SectionHeader';
 import SettingsRow from '../molecules/SettingsRow';
@@ -42,6 +44,17 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
 
   const handleExportData = () => {
     Alert.alert('Export', 'Export functionality is coming soon to the mobile app.');
+  };
+
+  const handleLogout = async () => {
+    const confirmed = window.confirm('Are you sure you want to log out?');
+    if (confirmed) {
+      try {
+        await signOut(firebaseAuth);
+      } catch (err) {
+        window.alert('Failed to log out. Please try again.');
+      }
+    }
   };
 
   return (
@@ -107,6 +120,18 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
           title="Clear All History"
           subtitle="This cannot be undone"
           onPress={handleClearData}
+          isDanger
+        />
+      </View>
+
+      <View style={styles.section}>
+        <SectionHeader title="ACCOUNT" />
+        
+        <SettingsRow
+          icon="right-from-bracket"
+          title="Log Out"
+          subtitle="Sign out of your account"
+          onPress={handleLogout}
           isDanger
         />
       </View>
