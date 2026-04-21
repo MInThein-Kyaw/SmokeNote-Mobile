@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, Alert, Switch, ScrollView } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { signOut } from 'firebase/auth';
-import { firebaseAuth } from '../../services/firebase';
 import { UserSettings, SmokeLog } from '../../types';
 import SectionHeader from '../atoms/SectionHeader';
 import SettingsRow from '../molecules/SettingsRow';
@@ -13,10 +11,10 @@ interface SettingsProps {
   logs: SmokeLog[];
   onUpdate: (settings: UserSettings) => void;
   onClearData: () => void;
-  onResetApp: () => void;
+  onSignOut: () => void;
 }
 
-const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearData, onResetApp }) => {
+const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearData, onSignOut }) => {
   const handleNameChange = (text: string) => {
     onUpdate({ ...settings, name: text });
   };
@@ -47,27 +45,16 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
     Alert.alert('Export', 'Export functionality is coming soon to the mobile app.');
   };
 
-  const handleLogout = async () => {
-    const confirmed = window.confirm('Are you sure you want to log out?');
-    if (confirmed) {
-      try {
-        await signOut(firebaseAuth);
-      } catch (err) {
-        window.alert('Failed to log out. Please try again.');
-      }
-    }
-  };
-
-  const handleResetApp = () => {
+  const handleSignOut = () => {
     Alert.alert(
-      'Reset App',
-      'This will return you to the landing page. Your data will remain saved.',
+      'Sign Out',
+      'You can log back in at any time to continue syncing your data.',
       [
         { text: 'Cancel', style: 'cancel' },
         { 
-          text: 'Reset', 
+          text: 'Sign Out', 
           style: 'default',
-          onPress: onResetApp
+          onPress: onSignOut
         },
       ]
     );
@@ -133,9 +120,9 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
         
         <SettingsRow
           icon="arrow-right-from-bracket"
-          title="Reset App"
-          subtitle="Return to landing page"
-          onPress={handleResetApp}
+          title="Sign Out"
+          subtitle="Switch to another account"
+          onPress={handleSignOut}
           rightComponent={<FontAwesome6 name="chevron-right" size={12} color="#52525b" />}
         />
         
@@ -144,18 +131,6 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
           title="Clear All History"
           subtitle="This cannot be undone"
           onPress={handleClearData}
-          isDanger
-        />
-      </View>
-
-      <View style={styles.section}>
-        <SectionHeader title="ACCOUNT" />
-        
-        <SettingsRow
-          icon="right-from-bracket"
-          title="Log Out"
-          subtitle="Sign out of your account"
-          onPress={handleLogout}
           isDanger
         />
       </View>

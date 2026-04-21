@@ -16,6 +16,11 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted }) => {
       description: 'See your smoke-free journey unfold with intuitive daily, weekly, and monthly tracking.',
     },
     {
+      icon: 'heart-pulse',
+      title: 'Health Insights',
+      description: 'Get real-time updates on how your body is healing and improving every day.',
+    },
+    {
       icon: 'calendar-check',
       title: 'Build Better Habits',
       description: 'Replace smoking with healthy routines using our smart tracking and reminders.',
@@ -33,7 +38,7 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted }) => {
     {
       icon: 'shield-heart',
       title: 'Privacy First',
-      description: 'Your data stays on your device. No accounts, no tracking, complete privacy.',
+      description: 'Your data is synced securely to your account and isolated per user in Firebase.',
     },
   ];
 
@@ -105,7 +110,7 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted }) => {
           </TouchableOpacity>
           
           <Text style={styles.footerText}>
-            No sign-up required • Completely free • Private & secure
+            Secure account sync • Completely free • Private & secure
           </Text>
         </View>
       </ScrollView>

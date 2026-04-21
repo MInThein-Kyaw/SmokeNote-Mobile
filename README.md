@@ -8,7 +8,8 @@ A modern, privacy-focused cigarette tracking app built with React Native and Exp
 - **📅 Calendar View** - Visual monthly calendar showing daily cigarette counts
 - **📈 Analytics** - Monthly summaries with trends and comparisons
 - **🔄 Flexible Comparisons** - Compare current month with any previous month
-- **💾 Local Storage** - All data stored locally on your device
+- **☁️ Firebase Sync** - Securely stores logs and settings in Firestore
+- **🔐 Email Auth** - Login and sign up with email/password
 - **🎨 Beautiful UI** - Dark-themed, modern interface
 - **📱 Cross-Platform** - Works on iOS, Android, and Web
 
@@ -49,7 +50,7 @@ A modern, privacy-focused cigarette tracking app built with React Native and Exp
 - **Framework**: React Native + Expo SDK 52
 - **Language**: TypeScript
 - **State Management**: React Hooks
-- **Storage**: AsyncStorage
+- **Backend**: Firebase Authentication + Cloud Firestore
 - **UI**: React Native components with custom styling
 - **Icons**: FontAwesome6 (Expo Vector Icons)
 - **Charts**: Victory Native
@@ -65,7 +66,7 @@ SmokeNote/
 │   ├── Settings.tsx          # User preferences
 │   └── Navbar.tsx            # Bottom navigation
 ├── services/
-│   └── storage.ts            # AsyncStorage wrapper
+│   └── firebase.ts           # Firebase Auth + Firestore setup
 ├── App.tsx                   # Main app component
 ├── types.ts                  # TypeScript definitions
 └── index.js                  # Entry point
@@ -81,7 +82,7 @@ SmokeNote/
 
 ## 🔐 Privacy
 
-All data is stored locally on your device. No information is sent to external servers.
+Data is stored in your own Firebase project and isolated by authenticated user ID.
 
 ## 📄 License
 

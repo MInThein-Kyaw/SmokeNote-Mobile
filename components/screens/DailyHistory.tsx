@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     flex: 1,
+    paddingBottom: 100, // Space for navbar
   },
 });
 

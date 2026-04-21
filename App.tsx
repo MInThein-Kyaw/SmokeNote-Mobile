@@ -1,95 +1,140 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { onAuthStateChanged, User } from 'firebase/auth';
 import { AppView, SmokeLog, UserSettings } from './types';
-import { storage } from './services/storage';
-import { firebaseAuth } from './services/firebase';
+import { User, onAuthStateChanged, signOut } from 'firebase/auth';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+  writeBatch,
+} from 'firebase/firestore';
+import { firebaseAuth, firebaseDb } from './services/firebase';
 import Landing from './components/screens/Landing';
 import Home from './components/screens/Home';
 import DailyHistory from './components/screens/DailyHistory';
 import MonthlySummary from './components/screens/MonthlySummary';
 import Settings from './components/screens/Settings';
-import Login from './components/screens/Login';
+import Auth from './components/screens/Auth';
 import Navbar from './components/Navbar';
 
-const STORAGE_KEY = 'smokenote_logs';
-const SETTINGS_KEY = 'smokenote_settings';
-const ONBOARDING_KEY = 'smokenote_onboarding_complete';
+const DEFAULT_SETTINGS: UserSettings = { name: 'User', remindersEnabled: true };
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
   const [logs, setLogs] = useState<SmokeLog[]>([]);
-  const [settings, setSettings] = useState<UserSettings>({ name: 'User', remindersEnabled: true });
-  const [hasSeenLanding, setHasSeenLanding] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
   const [user, setUser] = useState<User | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [hasSeenLanding, setHasSeenLanding] = useState(false);
+  const [isAuthLoaded, setIsAuthLoaded] = useState(false);
 
-  // Listen to auth state
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
-      setUser(currentUser);
-      setAuthLoading(false);
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (authUser) => {
+      setUser(authUser);
+      setIsAuthLoaded(true);
     });
+
     return unsubscribe;
   }, []);
-  
-  // Load initial state
+
   useEffect(() => {
-    const loadData = async () => {
-      const savedLogs = await storage.getItem(STORAGE_KEY);
-      const savedSettings = await storage.getItem(SETTINGS_KEY);
-      const onboardingComplete = await storage.getItem(ONBOARDING_KEY);
-      
-      if (savedLogs) setLogs(savedLogs);
-      if (savedSettings) setSettings(savedSettings);
-      setHasSeenLanding(onboardingComplete || false);
-      setIsLoaded(true);
+    if (!user) {
+      setLogs([]);
+      setSettings(DEFAULT_SETTINGS);
+      setCurrentView(AppView.HOME);
+      return;
+    }
+
+    const settingsRef = doc(firebaseDb, 'users', user.uid, 'settings', 'profile');
+    const logsRef = collection(firebaseDb, 'users', user.uid, 'logs');
+    const logsQuery = query(logsRef, orderBy('timestamp', 'asc'));
+
+    const unsubscribeSettings = onSnapshot(settingsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setSettings({ ...DEFAULT_SETTINGS, ...(snapshot.data() as Partial<UserSettings>) });
+        return;
+      }
+
+      setDoc(settingsRef, DEFAULT_SETTINGS).catch((error) => {
+        console.error('Failed to initialize settings', error);
+      });
+    });
+
+    const unsubscribeLogs = onSnapshot(logsQuery, (snapshot) => {
+      const firestoreLogs: SmokeLog[] = snapshot.docs.map((item) => ({
+        id: item.id,
+        timestamp: item.data().timestamp ?? Date.now(),
+      }));
+      setLogs(firestoreLogs);
+    });
+
+    return () => {
+      unsubscribeSettings();
+      unsubscribeLogs();
     };
-    loadData();
-  }, []);
-
-  // Persist data on changes (only after initial load)
-  useEffect(() => {
-    if (isLoaded) {
-      storage.setItem(STORAGE_KEY, logs);
-    }
-  }, [logs, isLoaded]);
-
-  useEffect(() => {
-    if (isLoaded) {
-      storage.setItem(SETTINGS_KEY, settings);
-    }
-  }, [settings, isLoaded]);
+  }, [user]);
 
   const addLog = useCallback(() => {
-    const newLog: SmokeLog = {
-      id: Math.random().toString(36).substr(2, 9),
-      timestamp: Date.now()
-    };
-    setLogs(prev => [...prev, newLog]);
-  }, []);
+    if (!user) return;
+
+    addDoc(collection(firebaseDb, 'users', user.uid, 'logs'), {
+      timestamp: Date.now(),
+    }).catch((error) => {
+      console.error('Failed to add log', error);
+    });
+  }, [user]);
 
   const removeLog = useCallback((id: string) => {
-    setLogs(prev => prev.filter(log => log.id !== id));
-  }, []);
+    if (!user) return;
+
+    deleteDoc(doc(firebaseDb, 'users', user.uid, 'logs', id)).catch((error) => {
+      console.error('Failed to remove log', error);
+    });
+  }, [user]);
 
   const clearLogs = useCallback(() => {
-    setLogs([]);
-    storage.removeItem(STORAGE_KEY);
-  }, []);
+    if (!user) return;
+
+    const logsRef = collection(firebaseDb, 'users', user.uid, 'logs');
+
+    getDocs(logsRef)
+      .then((snapshot) => {
+        const batch = writeBatch(firebaseDb);
+        snapshot.forEach((item) => batch.delete(item.ref));
+        return batch.commit();
+      })
+      .catch((error) => {
+        console.error('Failed to clear logs', error);
+      });
+  }, [user]);
 
   const handleGetStarted = useCallback(() => {
     setHasSeenLanding(true);
-    storage.setItem(ONBOARDING_KEY, true);
   }, []);
 
-  const resetApp = useCallback(() => {
-    setHasSeenLanding(false);
-    storage.removeItem(ONBOARDING_KEY);
-    setCurrentView(AppView.HOME);
+  const updateSettings = useCallback((nextSettings: UserSettings) => {
+    setSettings(nextSettings);
+
+    if (!user) return;
+
+    setDoc(doc(firebaseDb, 'users', user.uid, 'settings', 'profile'), nextSettings, { merge: true }).catch(
+      (error) => {
+        console.error('Failed to update settings', error);
+      }
+    );
+  }, [user]);
+
+  const handleSignOut = useCallback(() => {
+    signOut(firebaseAuth).catch((error) => {
+      console.error('Failed to sign out', error);
+    });
   }, []);
 
   const renderView = () => {
@@ -104,27 +149,16 @@ const App: React.FC = () => {
         return <Settings 
           settings={settings} 
           logs={logs}
-          onUpdate={setSettings} 
+          onUpdate={updateSettings}
           onClearData={clearLogs}
-          onResetApp={resetApp}
+          onSignOut={handleSignOut}
         />;
       default:
         return <Home logs={logs} onLog={addLog} />;
     }
   };
 
-  if (!isLoaded || authLoading) return null;
-
-  if (!user) {
-    return (
-      <View style={styles.container}>
-        <StatusBar style="light" />
-        <SafeAreaView style={styles.safeArea}>
-          <Login onLoginSuccess={() => {}} />
-        </SafeAreaView>
-      </View>
-    );
-  }
+  if (!isAuthLoaded) return null;
 
   if (!hasSeenLanding) {
     return (
@@ -135,17 +169,21 @@ const App: React.FC = () => {
     );
   }
 
+  if (!user) {
+    return (
+      <View style={styles.container}>
+        <StatusBar style="light" />
+        <Auth />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
-          <ScrollView 
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
-            {renderView()}
-          </ScrollView>
+          {renderView()}
         </View>
         <Navbar currentView={currentView} setView={setCurrentView} />
       </SafeAreaView>
@@ -164,9 +202,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
-  scrollContent: {
-    paddingBottom: 100, // Space for navbar
-  }
 });
 
 export default App;
