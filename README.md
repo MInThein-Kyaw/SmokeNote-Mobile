@@ -53,7 +53,7 @@ A modern, privacy-focused cigarette tracking app built with React Native and Exp
 - **Backend**: Firebase Authentication + Cloud Firestore
 - **UI**: React Native components with custom styling
 - **Icons**: FontAwesome6 (Expo Vector Icons)
-- **Charts**: Victory Native
+
 
 ## 🏗️ Project Structure
 
