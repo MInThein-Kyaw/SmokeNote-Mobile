@@ -6,6 +6,7 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { AppView, SmokeLog, UserSettings } from './types';
 import { storage } from './services/storage';
 import { firebaseAuth } from './services/firebase';
+import Landing from './components/screens/Landing';
 import Home from './components/screens/Home';
 import DailyHistory from './components/screens/DailyHistory';
 import MonthlySummary from './components/screens/MonthlySummary';
@@ -15,11 +16,13 @@ import Navbar from './components/Navbar';
 
 const STORAGE_KEY = 'smokenote_logs';
 const SETTINGS_KEY = 'smokenote_settings';
+const ONBOARDING_KEY = 'smokenote_onboarding_complete';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
   const [logs, setLogs] = useState<SmokeLog[]>([]);
   const [settings, setSettings] = useState<UserSettings>({ name: 'User', remindersEnabled: true });
+  const [hasSeenLanding, setHasSeenLanding] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -38,9 +41,11 @@ const App: React.FC = () => {
     const loadData = async () => {
       const savedLogs = await storage.getItem(STORAGE_KEY);
       const savedSettings = await storage.getItem(SETTINGS_KEY);
+      const onboardingComplete = await storage.getItem(ONBOARDING_KEY);
       
       if (savedLogs) setLogs(savedLogs);
       if (savedSettings) setSettings(savedSettings);
+      setHasSeenLanding(onboardingComplete || false);
       setIsLoaded(true);
     };
     loadData();
@@ -76,6 +81,17 @@ const App: React.FC = () => {
     storage.removeItem(STORAGE_KEY);
   }, []);
 
+  const handleGetStarted = useCallback(() => {
+    setHasSeenLanding(true);
+    storage.setItem(ONBOARDING_KEY, true);
+  }, []);
+
+  const resetApp = useCallback(() => {
+    setHasSeenLanding(false);
+    storage.removeItem(ONBOARDING_KEY);
+    setCurrentView(AppView.HOME);
+  }, []);
+
   const renderView = () => {
     switch (currentView) {
       case AppView.HOME:
@@ -89,7 +105,8 @@ const App: React.FC = () => {
           settings={settings} 
           logs={logs}
           onUpdate={setSettings} 
-          onClearData={clearLogs} 
+          onClearData={clearLogs}
+          onResetApp={resetApp}
         />;
       default:
         return <Home logs={logs} onLog={addLog} />;
@@ -105,6 +122,15 @@ const App: React.FC = () => {
         <SafeAreaView style={styles.safeArea}>
           <Login onLoginSuccess={() => {}} />
         </SafeAreaView>
+      </View>
+    );
+  }
+
+  if (!hasSeenLanding) {
+    return (
+      <View style={styles.container}>
+        <StatusBar style="light" />
+        <Landing onGetStarted={handleGetStarted} />
       </View>
     );
   }

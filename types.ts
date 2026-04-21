@@ -15,8 +15,3 @@ export interface UserSettings {
   name: string;
   remindersEnabled: boolean;
 }
-
-export interface HealthInsight {
-  text: string;
-  category: 'motivation' | 'health' | 'savings';
-}

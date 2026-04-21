@@ -32,14 +32,7 @@ A modern, privacy-focused cigarette tracking app built with React Native and Exp
    npm install --legacy-peer-deps
    ```
 
-3. **Set up environment variables** (optional, for AI insights)
-   
-   Create a `.env.local` file in the root directory:
-   ```
-   GEMINI_API_KEY=your_api_key_here
-   ```
-
-4. **Start the development server**
+3. **Start the development server**
    ```bash
    npm start
    ```
@@ -72,8 +65,7 @@ SmokeNote/
 │   ├── Settings.tsx          # User preferences
 │   └── Navbar.tsx            # Bottom navigation
 ├── services/
-│   ├── storage.ts            # AsyncStorage wrapper
-│   └── gemini.ts             # AI insights (optional)
+│   └── storage.ts            # AsyncStorage wrapper
 ├── App.tsx                   # Main app component
 ├── types.ts                  # TypeScript definitions
 └── index.js                  # Entry point
@@ -89,7 +81,7 @@ SmokeNote/
 
 ## 🔐 Privacy
 
-All data is stored locally on your device. No information is sent to external servers (except optional AI insights if API key is configured).
+All data is stored locally on your device. No information is sent to external servers.
 
 ## 📄 License
 

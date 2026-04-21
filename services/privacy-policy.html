@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Privacy Policy – SmokeNote</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #09090b;
+      --surface: #111113;
+      --border: #27272a;
+      --accent: #22c55e;
+      --accent-dim: rgba(34,197,94,0.12);
+      --text: #f4f4f5;
+      --muted: #71717a;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .meta {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 36px;
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.2s;
+    }
+
+    .section:hover {
+      border-color: #3f3f46;
+    }
+
+    .section-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      color: #a1a1aa;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    ul {
+      list-style: none;
+      margin-top: 8px;
+    }
+
+    ul li {
+      color: #a1a1aa;
+      font-size: 14px;
+      padding: 5px 0 5px 20px;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+
+    ul li:last-child { border-bottom: none; }
+
+    ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 12px;
+    }
+
+    .highlight {
+      display: inline-block;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+
+    /* Contact box */
+    .contact-box {
+      margin-top: 48px;
+      padding: 24px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .contact-box p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .contact-box a {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .contact-box a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    footer span {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="badge">LEGAL DOCUMENT</div>
+      <h1>Privacy Policy</h1>
+      <p class="meta">SmokeNote &nbsp;·&nbsp; Effective: January 1, 2025 &nbsp;·&nbsp; Last updated: April 2025</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">01 / OVERVIEW</div>
+      <h2>Introduction</h2>
+      <p>SmokeNote is a personal cigarette-tracking application built for individuals who want to monitor their smoking habits. Your privacy is our top priority. This policy explains what data we collect, how it is stored, and your rights over that data.</p>
+      <p>By using SmokeNote, you agree to the practices described in this policy.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">02 / DATA</div>
+      <h2>Data We Collect</h2>
+      <p>SmokeNote collects only the minimum data needed to function:</p>
+      <ul>
+        <li>Cigarette log entries (count + timestamp)</li>
+        <li>Daily and monthly usage patterns derived from your logs</li>
+        <li>Your display name and notification preferences (Settings)</li>
+        <li>Onboarding completion status</li>
+      </ul>
+      <p style="margin-top:12px;">We do <span class="highlight">NOT</span> collect your name, email, phone number, location, or any biometric data.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">03 / STORAGE</div>
+      <h2>How Data Is Stored</h2>
+      <p>All data is stored <strong style="color:#f4f4f5;">locally on your device</strong> using AsyncStorage. No data is uploaded to any server or cloud database.</p>
+      <ul>
+        <li>Local storage only — no backend database</li>
+        <li>Data never leaves your device by default</li>
+        <li>Uninstalling the app permanently deletes all data</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">04 / THIRD PARTIES</div>
+      <h2>Third-Party Services</h2>
+      <p>SmokeNote does not use third-party services for analytics, advertising, or AI features.</p>
+      <p style="margin-top:12px;">No advertising SDKs, analytics trackers, or data brokers are used in this app.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">05 / YOUR RIGHTS</div>
+      <h2>Your Rights (PDPA Compliant)</h2>
+      <p>You have full control over your data at all times:</p>
+      <ul>
+        <li>Right to Access — view all your data in the History and Monthly screens</li>
+        <li>Right to Deletion — use "Clear All Data" in Settings to permanently delete everything</li>
+        <li>Right to Erasure — uninstalling the app removes all stored data</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-num">06 / CHILDREN</div>
+      <h2>Children's Privacy</h2>
+      <p>SmokeNote is intended for users aged <span class="highlight">18 and above</span>. We do not knowingly collect data from minors. If you believe a minor has used this app, please contact us immediately.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-num">07 / CHANGES</div>
+      <h2>Policy Updates</h2>
+      <p>We may update this privacy policy from time to time. Any changes will be reflected on this page with an updated date. Continued use of the app after changes constitutes acceptance of the new policy.</p>
+    </div>
+
+    <div class="contact-box">
+      <p>Questions about this privacy policy?</p>
+      <a href="mailto:mintheinkyaw@email.com">Contact the Developer</a>
+    </div>
+
+    <footer>
+      <span>© 2025 SmokeNote · Min Thein Kyaw</span>
+      <span>v1.0.0 · Spark Plan</span>
+    </footer>
+
+  </div>
+</body>
+</html>

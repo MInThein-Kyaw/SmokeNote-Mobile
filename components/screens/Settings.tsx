@@ -13,9 +13,10 @@ interface SettingsProps {
   logs: SmokeLog[];
   onUpdate: (settings: UserSettings) => void;
   onClearData: () => void;
+  onResetApp: () => void;
 }
 
-const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearData }) => {
+const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearData, onResetApp }) => {
   const handleNameChange = (text: string) => {
     onUpdate({ ...settings, name: text });
   };
@@ -55,6 +56,21 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
         window.alert('Failed to log out. Please try again.');
       }
     }
+  };
+
+  const handleResetApp = () => {
+    Alert.alert(
+      'Reset App',
+      'This will return you to the landing page. Your data will remain saved.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Reset', 
+          style: 'default',
+          onPress: onResetApp
+        },
+      ]
+    );
   };
 
   return (
@@ -114,6 +130,14 @@ const Settings: React.FC<SettingsProps> = ({ settings, logs, onUpdate, onClearDa
 
       <View style={styles.section}>
         <SectionHeader title="MAINTENANCE" />
+        
+        <SettingsRow
+          icon="arrow-right-from-bracket"
+          title="Reset App"
+          subtitle="Return to landing page"
+          onPress={handleResetApp}
+          rightComponent={<FontAwesome6 name="chevron-right" size={12} color="#52525b" />}
+        />
         
         <SettingsRow
           icon="trash-can"
