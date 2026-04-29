@@ -1,4 +1,4 @@
-package com.smokenote.app
+package com.mfu.smokenote
 
 import android.app.Application
 import android.content.res.Configuration
