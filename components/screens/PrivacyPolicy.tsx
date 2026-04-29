@@ -28,7 +28,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onStartApp }) => {
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Where Data Lives</Text>
           <Text style={styles.bodyText}>
-            All SmokeNote data is stored locally on your device using AsyncStorage. We do not upload your data to servers.
+            All SmokeNote data is securely stored in Firebase. Your data is encrypted and isolated per user account, ensuring your information remains private and protected.
           </Text>
         </View>
 
@@ -36,7 +36,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onStartApp }) => {
           <Text style={styles.sectionTitle}>Your Rights</Text>
           <Text style={styles.bodyText}>- Access your records anytime</Text>
           <Text style={styles.bodyText}>- Clear all history from Settings</Text>
-          <Text style={styles.bodyText}>- Uninstalling the app removes local data</Text>
+          <Text style={styles.bodyText}>- Delete your account to remove all Firebase data</Text>
         </View>
 
         <View style={styles.endArea}>

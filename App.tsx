@@ -18,6 +18,7 @@ import {
 } from 'firebase/firestore';
 import { firebaseAuth, firebaseDb } from './services/firebase';
 import Landing from './components/screens/Landing';
+import PrivacyPolicy from './components/screens/PrivacyPolicy';
 import Home from './components/screens/Home';
 import DailyHistory from './components/screens/DailyHistory';
 import MonthlySummary from './components/screens/MonthlySummary';
@@ -33,6 +34,7 @@ const App: React.FC = () => {
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
   const [user, setUser] = useState<User | null>(null);
   const [hasSeenLanding, setHasSeenLanding] = useState(false);
+  const [hasAcceptedPrivacyPolicy, setHasAcceptedPrivacyPolicy] = useState(false);
   const [isAuthLoaded, setIsAuthLoaded] = useState(false);
 
   useEffect(() => {
@@ -119,6 +121,10 @@ const App: React.FC = () => {
     setHasSeenLanding(true);
   }, []);
 
+  const handleStartApp = useCallback(() => {
+    setHasAcceptedPrivacyPolicy(true);
+  }, []);
+
   const updateSettings = useCallback((nextSettings: UserSettings) => {
     setSettings(nextSettings);
 
@@ -165,6 +171,15 @@ const App: React.FC = () => {
       <View style={styles.container}>
         <StatusBar style="light" />
         <Landing onGetStarted={handleGetStarted} />
+      </View>
+    );
+  }
+
+  if (!hasAcceptedPrivacyPolicy) {
+    return (
+      <View style={styles.container}>
+        <StatusBar style="light" />
+        <PrivacyPolicy onStartApp={handleStartApp} />
       </View>
     );
   }

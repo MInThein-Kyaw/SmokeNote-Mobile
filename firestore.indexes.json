@@ -1,15 +1,4 @@
 {
-  "indexes": [
-    {
-      "collectionGroup": "logs",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "timestamp",
-          "order": "ASCENDING"
-        }
-      ]
-    }
-  ],
+  "indexes": [],
   "fieldOverrides": []
 }

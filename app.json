@@ -8,15 +8,20 @@
     "newArchEnabled": false,
     "main": "index.js",
     "jsEngine": "hermes",
+
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#09090b"
     },
+
     "plugins": [
       [
         "expo-build-properties",
         {
           "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
             "newArchEnabled": false
           },
           "ios": {
@@ -25,15 +30,25 @@
         }
       ]
     ],
+
+    "android": {
+      "package": "com.smokenote.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#09090b"
+      }
+    },
+
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.smokenote.app"
     },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#09090b"
-      },
-      "package": "com.smokenote.app"
-    }
+
+    "extra": {
+      "eas": {
+        "projectId": "d59e2a8c-951d-47d1-b21c-1f11704519de"
+      }
+    },
+
+    "owner": "mintheinkyaw"
   }
 }

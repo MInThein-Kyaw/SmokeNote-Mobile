@@ -15,8 +15,6 @@ dist-ssr
 .env.*
 !.env.example
 
-# Firebase config (contains sensitive API keys)
-services/firebase.ts
 
 # Editor directories and files
 .vscode/*
@@ -28,3 +26,9 @@ services/firebase.ts
 *.njsproj
 *.sln
 *.sw?
+
+# Sensitive keys and certificates
+*.jks
+@mintheinkyaw__smokenote*.jks
+*.pem
+upload_certificate.pem
